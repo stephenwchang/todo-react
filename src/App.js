@@ -29,17 +29,19 @@ class App extends Component {
 
   // Delete Todo Item
   delTodo = (id) => {
-    let deletedTodoList = this.state.todos.filter(todo => todo.id !== id);
-    this.setState({ todos: deletedTodoList });
+    Axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(res => {
+        let deletedTodoList = this.state.todos.filter(todo => todo.id !== id);
+        this.setState({ todos: deletedTodoList })
+      });
   }
 
   addItem = (title) => {
-    const newTodo = {
-      id: 4,
+    Axios.post('https://jsonplaceholder.typicode.com/todos', {
       title: title,
       completed: false
-    }
-    this.setState({ todos: [...this.state.todos, newTodo] })
+    })
+      .then(res => this.setState({ todos: [...this.state.todos, res.data] }));
   }
 
   render() {
