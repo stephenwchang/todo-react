@@ -2,11 +2,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-const connectDb = () => {
-  return mongoose.connect('mongodb://localhost/todos')
-};
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/Todos', { useNewUrlParser: true })
+const connection = mongoose.connection;
+connection.once('open', () => console.log('MongoDB database connection establoshed successfully'));
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -25,7 +26,6 @@ if (process.env.NODE_ENV === "test") {
 }
 
 // Starting the server, syncing our models ------------------------------------/
-connectDb().then(async () => {
   app.listen(PORT, () => {
     console.log(
       "==>  Listening on port %s. Visit http://localhost:%s/ in your browser.",
@@ -33,5 +33,5 @@ connectDb().then(async () => {
       PORT
     );
   });
-});
+
 module.exports = app;

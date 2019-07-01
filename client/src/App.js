@@ -14,11 +14,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-    Axios.get('/test')
-      .then(res => this.setState({ todos: res.data }))
+    this.callBackendAPI()
+      .then(res => this.setState({ todos: res }))
+      .catch(err => console.log(err));
   }
+
+  // api request to backend
+  callBackendAPI = async () => {
+    const response = await fetch('/test');
+    const body = await response.json();
+
+    if (response.status !== 200) {
+      throw Error(body.message)
+    }
+    return body;
+  };
+
   // Toggle Complete
   markComplete = (id) => {
+    console.log(id)
     this.setState({ todos: this.state.todos.map(todo => {
       if(todo.id === id) {
         todo.completed = !todo.completed

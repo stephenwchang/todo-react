@@ -13,7 +13,7 @@ export class TodoItem extends Component {
   }
 
   render() {
-    const { id, title } = this.props.todo;
+    const { _id: id, title } = this.props.todo;
     return (
       <div style={this.getStyle()}>
         <p>
