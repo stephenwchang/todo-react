@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const cors = require('cors');
 const PORT = process.env.PORT || 8080;
 
 // MongoDB connection
@@ -11,6 +12,7 @@ connection.once('open', () => console.log('MongoDB database connection establosh
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use(express.json());
 
 
