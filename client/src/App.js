@@ -4,7 +4,7 @@ import Header from './components/layout/header';
 import Todos from './components/Todos';
 import AddTodo from './components/AddTodo';
 import About from './components/pages/About';
-import Axios from 'axios';
+import axios from 'axios';
 
 import './App.css';
 
@@ -13,54 +13,41 @@ class App extends Component {
     todos: []
   }
 
+  // get request to load todos
   componentDidMount() {
-    Axios.get('http://localhost:8080/test')
+    axios.get('http://localhost:8080/todos/json')
       .then(res => this.setState({ todos: res.data }));
   }
-  // componentDidMount() {
-  //   this.callBackendAPI()
-  //     .then(res => this.setState({ todos: res }))
-  //     .catch(err => console.log(err));
-  // }
-
-  // // api request to backend
-  // callBackendAPI = async () => {
-  //   const response = await fetch('/test');
-  //   const body = await response.json();
-
-  //   if (response.status !== 200) {
-  //     throw Error(body.message)
-  //   }
-  //   return body;
-  // };
 
   // Toggle Complete
   markComplete = (id) => {
-    console.log(id)
-    this.setState({ todos: this.state.todos.map(todo => {
-      if(todo.id === id) {
-        todo.completed = !todo.completed
-      }
-      return todo;
-    }) });
+    axios.put(`http://localhost:8080/todos/update/${id}`)
+      .then(res => {
+        this.setState({ todos: this.state.todos.map(todo => {
+          if(todo._id === id) {
+            todo.completed = !todo.completed
+          }
+          return todo;
+        })});
+      });
   }
 
   // Delete Todo Item
   delTodo = (id) => {
-    Axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    axios.delete(`http://localhost:8080/todos/delete/${id}`)
       .then(res => {
-        let deletedTodoList = this.state.todos.filter(todo => todo.id !== id);
+        let deletedTodoList = this.state.todos.filter(todo => todo._id !== id);
         this.setState({ todos: deletedTodoList })
       });
   }
 
   addItem = (title) => {
-    Axios.post('https://jsonplaceholder.typicode.com/todos', {
+    axios.post('http://localhost:8080/todos/new', {
       title: title,
       completed: false
     })
-      .then(res => this.setState({ todos: [...this.state.todos, res.data] }));
-  }
+    .then(res => this.setState({ todos: [...this.state.todos, res.data] }));
+   }
 
   render() {
     return (
